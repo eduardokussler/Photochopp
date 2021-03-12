@@ -91,7 +91,7 @@ public class HistogramMatching {
         return img;
     }
 
-
+    
     private int findTargetShadeClosest(int shade, int [] srcHistCum, int [] targetHistCum ) {
         int val = srcHistCum[shade];
         int [] diffs = new int[256];

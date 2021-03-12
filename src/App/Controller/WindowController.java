@@ -468,12 +468,6 @@ public class WindowController {
         createHistogramWindow("after equalization");
     }
 
-    public void zoomOut() {
-        int xFactor = (int)spnXfactor.getValueFactory().getValue();
-        int yFactor = (int)spnYfactor.getValueFactory().getValue();
-
-    }
-
     public void createHistMatchWindow() throws IOException {
         // Creating another window
         FXMLLoader loader = new FXMLLoader(getClass().getResource("HistogramMatching.fxml"));
@@ -484,5 +478,50 @@ public class WindowController {
         stage.show();
         HistogramMatching histogramMatching = loader.getController();
 
+    }
+
+    public void zoomOut() {
+        int xFactor = (int)spnXfactor.getValueFactory().getValue();
+        int yFactor = (int)spnYfactor.getValueFactory().getValue();
+        if (targetImage.getImage() == null) {
+            targetImage.setImage(originalImage.getImage());
+        }
+        int red;
+        int green;
+        int blue;
+        BufferedImage srcImg = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        BufferedImage resultImg = new BufferedImage((int)targetImage.getImage().getWidth() / xFactor, (int)targetImage.getImage().getHeight() / yFactor , BufferedImage.TYPE_INT_ARGB);
+        for(int x = 0; x < targetImage.getImage().getWidth(); x += xFactor) {
+            for(int y = 0; y < targetImage.getImage().getHeight(); y += yFactor) {
+                red = 0;
+                green = 0;
+                blue = 0;
+                for(int i = x; i < x + xFactor; i++) {
+                    if(i >= srcImg.getWidth()) {
+                        break;
+                    }
+                    for(int j = y; j < y + yFactor; j++) {
+                        if(j >= srcImg.getHeight()){
+                            break;
+                        }
+                        red += Pixels.getR(srcImg.getRGB(i, j));
+                        green += Pixels.getG(srcImg.getRGB(i, j));
+                        blue += Pixels.getB(srcImg.getRGB(i, j));
+                    }
+                }
+                // Calculando as médias
+                red = red / (xFactor * yFactor);
+                green = green / (xFactor * yFactor);
+                blue = blue / (xFactor * yFactor);
+                int xCoord = x/xFactor;
+                int yCoord = y/yFactor;
+                if(xCoord > resultImg.getWidth())
+                    xCoord = resultImg.getWidth() - 1;
+                if(yCoord > resultImg.getHeight())
+                    yCoord = resultImg.getHeight() - 1;
+                resultImg.setRGB(xCoord, yCoord, Pixels.assemblePixel(red, green, blue));
+            }
+        }
+        targetImage.setImage(SwingFXUtils.toFXImage(resultImg, null));
     }
 }
