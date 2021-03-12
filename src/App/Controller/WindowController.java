@@ -54,7 +54,7 @@ public class WindowController {
     public static void showView() throws IOException {
         Parent root = FXMLLoader.load(WindowController.class.getResource("Window.fxml"));
         Main.stage.setTitle("Photochopp");
-        Main.stage.setScene(new Scene(root, 1200, 800));
+        Main.stage.setScene(new Scene(root, 1500, 900));
         Main.stage.show();
 
     }
@@ -524,4 +524,67 @@ public class WindowController {
         }
         targetImage.setImage(SwingFXUtils.toFXImage(resultImg, null));
     }
+
+
+    public void zoomIn() {
+        if(targetImage.getImage() == null) {
+            targetImage.setImage(originalImage.getImage());
+        }
+        int factor = 2;
+        BufferedImage srcImg = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        BufferedImage resultImg = new BufferedImage(srcImg.getWidth() * factor, srcImg.getHeight() * factor, BufferedImage.TYPE_INT_ARGB);
+
+        // Copiando os valores já conhecidos
+        for (int i = 0; i < srcImg.getWidth(); i++) {
+            for(int j = 0; j < srcImg.getHeight(); j++) {
+                resultImg.setRGB(i*factor, j*factor, srcImg.getRGB(i, j));
+            }
+        }
+        int red;
+        int green;
+        int blue;
+        // Fazendo interpolação vertical
+        for (int i = 0; i < resultImg.getWidth(); i++) {
+            for(int j = 1; j < resultImg.getHeight() - 1; j += factor) {
+                red = Pixels.getR(resultImg.getRGB(i, j - 1));
+                green = Pixels.getG(resultImg.getRGB(i, j - 1));
+                blue = Pixels.getB(resultImg.getRGB(i, j - 1));
+
+                red += Pixels.getR(resultImg.getRGB(i, j + 1));
+                green += Pixels.getG(resultImg.getRGB(i, j + 1));
+                blue += Pixels.getB(resultImg.getRGB(i, j + 1));
+
+                red = red / 2;
+                green = green / 2;
+                blue = blue / 2;
+
+                resultImg.setRGB(i, j, Pixels.assemblePixel(red, green, blue));
+            }
+        }
+
+        // Fazendo a interpolação horizontal
+        for (int i = 1; i < resultImg.getWidth() - 1; i += factor) {
+            for(int j = 0; j < resultImg.getHeight(); j++) {
+                red = Pixels.getR(resultImg.getRGB(i - 1, j));
+                green = Pixels.getG(resultImg.getRGB(i - 1, j));
+                blue = Pixels.getB(resultImg.getRGB(i - 1, j));
+
+                red += Pixels.getR(resultImg.getRGB(i + 1, j));
+                green += Pixels.getG(resultImg.getRGB(i + 1, j));
+                blue += Pixels.getB(resultImg.getRGB(i + 1, j));
+
+                red = red / 2;
+                green = green / 2;
+                blue = blue / 2;
+                resultImg.setRGB(i, j, Pixels.assemblePixel(red, green, blue));
+            }
+        }
+
+
+
+        targetImage.setImage(SwingFXUtils.toFXImage(resultImg, null));
+
+    }
+
 }
+

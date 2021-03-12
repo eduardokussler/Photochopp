@@ -49,6 +49,7 @@
             </Spinner>
             <Label layoutX="398.0" layoutY="103.0" text="Reduction X" />
             <Label layoutX="398.0" layoutY="155.0" text="Reduction Y" />
+            <Button layoutX="603.0" layoutY="59.0" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="716.0" prefWidth="743.0">
          <children>

@@ -8,7 +8,7 @@
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="498.0" prefWidth="369.0">
          <children>
-            <ImageView fx:id="originalImage" fitHeight="538.0" fitWidth="717.0" layoutY="346.0" pickOnBounds="true" smooth="false" />
+            <ImageView fx:id="originalImage" fitHeight="538.0" fitWidth="717.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
             <Button fx:id="btnShow" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#setOriginalImage" text="Load Image" />
             <Button fx:id="btnCopy" layoutX="116.0" layoutY="14.0" mnemonicParsing="false" onAction="#copyToTarget" text="Copy" />
             <Button fx:id="btnFlipVertically" layoutX="265.0" layoutY="14.0" mnemonicParsing="false" onAction="#flipImageVertically" text="Flip Vertically" />
@@ -49,10 +49,11 @@
             </Spinner>
             <Label layoutX="398.0" layoutY="103.0" text="Reduction X" />
             <Label layoutX="398.0" layoutY="155.0" text="Reduction Y" />
+            <Button layoutX="603.0" layoutY="59.0" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="716.0" prefWidth="743.0">
          <children>
-            <ImageView fx:id="targetImage" fitHeight="538.0" fitWidth="717.0" layoutX="7.0" layoutY="346.0" pickOnBounds="true" smooth="false" />
+            <ImageView fx:id="targetImage" fitHeight="538.0" fitWidth="717.0" layoutX="7.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
             <Button fx:id="btnSave" layoutX="195.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveImage" text="Save" />
             <Button layoutX="26.0" layoutY="14.0" mnemonicParsing="false" onAction="#createHistMatchWindow" text="HIstogram Match" />
          </children></AnchorPane>
