@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class HistogramMatching {
@@ -90,12 +91,26 @@ public class HistogramMatching {
         return img;
     }
 
-    /*
-    private int findTargetShadeClosest(int shade, int [] srcHistCum, int [] targetHistCum ) {
 
-        return ;
+    private int findTargetShadeClosest(int shade, int [] srcHistCum, int [] targetHistCum ) {
+        int val = srcHistCum[shade];
+        int [] diffs = new int[256];
+        // Calculando as diferenças entre os histogramas
+        for(int i = 0; i < targetHistCum.length; i++) {
+            diffs[i] = Math.abs(targetHistCum[i] - val);
+        }
+        // Encontrando a menor diferença
+        int leastDiff = diffs[0];
+        int leastIndex = 0;
+        for(int i = 1; i < diffs.length; i++) {
+            if(diffs[i] <= leastDiff) {
+                leastDiff = diffs[i];
+                leastIndex = i;
+            }
+        }
+        return leastIndex;
     }
-    */
+
 
     public void histMatch() throws IOException {
         // Creating another window
@@ -125,7 +140,7 @@ public class HistogramMatching {
         int [] histSndImg = new int[256];
         int [] histFstImgCum = new int[256];
         int [] histSndImgCum = new int[256];
-        int [] HistogramMatch = new int[256];
+        int [] histogramMatch = new int[256];
         BufferedImage fstImg = SwingFXUtils.fromFXImage(imgFst.getImage(), null);
         BufferedImage sndImg = SwingFXUtils.fromFXImage(imgSnd.getImage(), null);
         Histogram.histCalc(histFstImg, fstImg);
@@ -133,9 +148,13 @@ public class HistogramMatching {
         histFstImgCum = Histogram.calcHistCum(histFstImg, fstImg);
         histSndImgCum = Histogram.calcHistCum(histSndImg, sndImg);
 
+        for(int shade = 0; shade < histogramMatch.length; shade++) {
+            histogramMatch[shade] = findTargetShadeClosest(shade, histFstImgCum, histSndImgCum);
+        }
+
         for (int i = 0; i < fstImg.getWidth(); i++) {
             for(int j = 0; j < fstImg.getHeight(); j++) {
-                int newPixel = Pixels.assemblePixel(HistogramMatch[Pixels.getG(fstImg.getRGB(i,j))]);
+                int newPixel = Pixels.assemblePixel(histogramMatch[Pixels.getG(fstImg.getRGB(i,j))]);
                 imgMatched.setRGB(i, j, newPixel);
             }
         }
