@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controller.WindowController">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="498.0" prefWidth="369.0">
+         <children>
+            <ImageView fx:id="originalImage" fitHeight="538.0" fitWidth="717.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
+            <Button fx:id="btnShow" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#setOriginalImage" text="Load Image" />
+            <Button fx:id="btnCopy" layoutX="116.0" layoutY="14.0" mnemonicParsing="false" onAction="#copyToTarget" text="Copy" />
+            <Button fx:id="btnFlipVertically" layoutX="265.0" layoutY="14.0" mnemonicParsing="false" onAction="#flipImageVertically" text="Flip Vertically" />
+            <Button fx:id="btnLuminance" layoutX="174.0" layoutY="14.0" mnemonicParsing="false" onAction="#calcLuminance" text="Luminance" />
+            <Button fx:id="btnFliphorizontally" layoutX="373.0" layoutY="14.0" mnemonicParsing="false" onAction="#flipImageHorizontally" text="Flip Horizontally" />
+             <Spinner fx:id="spnColors" editable="true" layoutX="116.0" layoutY="59.0">
+                 <valueFactory>
+                     <SpinnerValueFactory.IntegerSpinnerValueFactory max="256" min="1" />
+                 </valueFactory>
+             </Spinner>
+            <Button fx:id="btnQuantize" layoutX="21.0" layoutY="59.0" mnemonicParsing="false" onAction="#quantize" text="Quantize" />
+            <Button layoutX="282.0" layoutY="59.0" mnemonicParsing="false" onAction="#histogramCalc" text="Histogram" />
+            <Button layoutX="14.0" layoutY="99.0" mnemonicParsing="false" onAction="#adjustBrightness" text="Adjust Brightness" />
+            <Spinner fx:id="spnBrightness" editable="true" layoutX="152.0" layoutY="99.0">
+               <valueFactory>
+                  <SpinnerValueFactory.IntegerSpinnerValueFactory max="255" min="-255" />
+               </valueFactory>
+            </Spinner>
+            <Spinner fx:id="spnContrast" editable="true" layoutX="152.0" layoutY="151.0">
+               <valueFactory>
+                  <SpinnerValueFactory.DoubleSpinnerValueFactory amountToStepBy="0.25" initialValue="0.5" max="255.0" min="0.0" />
+
+               </valueFactory>
+            </Spinner>
+            <Button layoutX="19.0" layoutY="151.0" mnemonicParsing="false" onAction="#adjustContrast" text="Adjust Contrast" />
+            <Button layoutX="398.0" layoutY="59.0" mnemonicParsing="false" onAction="#calcNegative" text="Negative" />
+            <Button layoutX="490.0" layoutY="14.0" mnemonicParsing="false" onAction="#histEqualization" text="Histogram Equalization" />
+            <Button layoutX="490.0" layoutY="59.0" mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" />
+            <Spinner fx:id="spnYfactor" editable="true" layoutX="490.0" layoutY="151.0">
+               <valueFactory>
+                  <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="1" max="255" min="1" />
+               </valueFactory>
+            </Spinner>
+            <Spinner fx:id="spnXfactor" editable="true" layoutX="490.0" layoutY="99.0">
+               <valueFactory>
+                  <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="1" max="255" min="1" />
+               </valueFactory>
+            </Spinner>
+            <Label layoutX="398.0" layoutY="103.0" text="Reduction X" />
+            <Label layoutX="398.0" layoutY="155.0" text="Reduction Y" />
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="716.0" prefWidth="743.0">
+         <children>
+            <ImageView fx:id="targetImage" fitHeight="538.0" fitWidth="717.0" layoutX="7.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
+            <Button fx:id="btnSave" layoutX="195.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveImage" text="Save" />
+            <Button layoutX="26.0" layoutY="14.0" mnemonicParsing="false" onAction="#createHistMatchWindow" text="HIstogram Match" />
+         </children></AnchorPane>
+  </items>
+</SplitPane>

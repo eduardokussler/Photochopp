@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controller.HistogramMatching">
+   <children>
+      <SplitPane dividerPositions="0.5013976240391335" layoutX="14.0" layoutY="14.0" prefHeight="873.0" prefWidth="1468.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="imgFst" fitHeight="800.0" fitWidth="697.0" layoutX="15.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="btnFstImg" layoutX="14.0" layoutY="23.0" mnemonicParsing="false" onAction="#loadImage1" text="Load first image" />
+                  <Button layoutX="299.0" layoutY="23.0" mnemonicParsing="false" onAction="#histMatch" text="Histogram Match" />
+                  <Button fx:id="btnSndImg" layoutX="146.0" layoutY="23.0" mnemonicParsing="false" onAction="#loadImage2" text="Load Second Image" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="imgSnd" fitHeight="800.0" fitWidth="697.0" layoutX="14.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
