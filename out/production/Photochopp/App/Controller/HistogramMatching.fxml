@@ -4,7 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controller.HistogramMatching">
+<AnchorPane prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controller.HistogramMatching">
    <children>
       <SplitPane dividerPositions="0.5013976240391335" layoutX="14.0" layoutY="14.0" prefHeight="873.0" prefWidth="1468.0">
         <items>
