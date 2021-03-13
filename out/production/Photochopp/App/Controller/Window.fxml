@@ -50,12 +50,19 @@
             <Label layoutX="398.0" layoutY="103.0" text="Reduction X" />
             <Label layoutX="398.0" layoutY="155.0" text="Reduction Y" />
             <Button layoutX="603.0" layoutY="59.0" mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" />
+            <Button layoutX="22.0" layoutY="197.0" mnemonicParsing="false" onAction="#gaussianFilter" text="Gaussian Filter" />
+            <Button layoutX="142.0" layoutY="197.0" mnemonicParsing="false" onAction="#laplacianFilter" text="Laplacian Filter" />
+            <Button layoutX="292.0" layoutY="197.0" mnemonicParsing="false" onAction="#highPassFilter" text="High Pass Filter" />
+            <Button layoutX="424.0" layoutY="197.0" mnemonicParsing="false" onAction="#prewittXFilter" text="Prewitt Hx" />
+            <Button layoutX="526.0" layoutY="197.0" mnemonicParsing="false" onAction="#prewittYFilter" text="Prewitt Hy" />
+            <Button layoutX="42.0" layoutY="253.0" mnemonicParsing="false" onAction="#sobelXFilter" text="Sobel Hx" />
+            <Button layoutX="148.0" layoutY="253.0" mnemonicParsing="false" onAction="#sobelYFilter" text="Sobel Hy" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="716.0" prefWidth="743.0">
          <children>
             <ImageView fx:id="targetImage" fitHeight="538.0" fitWidth="717.0" layoutX="7.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
             <Button fx:id="btnSave" layoutX="195.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveImage" text="Save" />
-            <Button layoutX="26.0" layoutY="14.0" mnemonicParsing="false" onAction="#createHistMatchWindow" text="HIstogram Match" />
+            <Button layoutX="26.0" layoutY="14.0" mnemonicParsing="false" onAction="#createHistMatchWindow" text="Histogram Match" />
          </children></AnchorPane>
   </items>
 </SplitPane>

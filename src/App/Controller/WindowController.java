@@ -262,8 +262,11 @@ public class WindowController {
        int blueMask = 0x000000ff;
        int quantColors = (int)spnColors.getValueFactory().getValue();
        // Sempre usa de base a imagem originalc
-       copyToTarget();
-       calcLuminance();
+       if(!Pixels.isGrayscale(SwingFXUtils.fromFXImage(originalImage.getImage(), null))){
+           calcLuminance();
+       } else {
+           copyToTarget();
+       }
        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
        int tamMax = getMaxLuminance(image);
        int tamMin = getMinLuminance(image);
@@ -318,13 +321,8 @@ public class WindowController {
         HistogramControler.showHistogram(returnImage);
     }
     public void histogramCalc() throws Exception {
-        // Para testar se a imagem já está em tons de cinza
-        // Seleciona um pixel aleatório e ve se os valores RGB são diferentes
-        // Pode acontecer de que o pixel selecionado seja cinza, embora a  imagem em si não seja
-        // É uma possibilidade remota e para os objetivos do trabalho e as limitações das bibliotecas,
-        // Essa é uma solução ok
-        int randPixel = SwingFXUtils.fromFXImage(originalImage.getImage(), null).getRGB((int)(Math.random() * originalImage.getImage().getWidth() - 1), (int)(Math.random() * originalImage.getImage().getHeight() - 1));
-        if(Pixels.getR(randPixel) != Pixels.getG(randPixel) || Pixels.getR(randPixel) != Pixels.getB(randPixel) || Pixels.getB(randPixel) != Pixels.getG(randPixel)) {
+
+        if(!Pixels.isGrayscale(SwingFXUtils.fromFXImage(originalImage.getImage(), null))) {
             calcLuminance();
         } else {
             targetImage.setImage(originalImage.getImage());
@@ -436,13 +434,8 @@ public class WindowController {
     }
 
     public void histEqualization() throws Exception {
-        // Para testar se a imagem já está em tons de cinza
-        // Seleciona um pixel aleatório e ve se os valores RGB são diferentes
-        // Pode acontecer de que o pixel selecionado seja cinza, embora a  imagem em si não seja
-        // É uma possibilidade remota e para os objetivos do trabalho e as limitações das bibliotecas,
-        // Essa é uma solução ok
-        int randPixel = SwingFXUtils.fromFXImage(originalImage.getImage(), null).getRGB((int)(Math.random() * originalImage.getImage().getWidth()), (int)(Math.random() * originalImage.getImage().getHeight()));
-        if(Pixels.getR(randPixel) != Pixels.getG(randPixel) || Pixels.getR(randPixel) != Pixels.getB(randPixel) || Pixels.getB(randPixel) != Pixels.getG(randPixel)) {
+
+        if(!Pixels.isGrayscale(SwingFXUtils.fromFXImage(originalImage.getImage(), null))) {
             calcLuminance();
         } else {
             targetImage.setImage(originalImage.getImage());
@@ -585,6 +578,217 @@ public class WindowController {
         targetImage.setImage(SwingFXUtils.toFXImage(resultImg, null));
 
     }
+
+    private BufferedImage convolution(float [][] filter, BufferedImage image) {
+        BufferedImage resultImg = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        if(!Pixels.isGrayscale(image)) {
+            image = Pixels.luminance(image);
+        }
+        // Altura original
+        int N = image.getHeight();
+        // Largura original
+        int M = image.getWidth();
+
+        // altura
+        int n2 = (int)Math.floor((double)filter.length/ 2);
+        // largura
+        int m2 = (int)Math.floor((double)filter[0].length / 2);
+        double sum;
+
+        for(int y = n2; y < N - n2 - 1; y++) {
+            for(int x = m2; x < M - m2 -1; x++) {
+                sum = 0f;
+                for(int k = -n2; k <= n2; k++) {
+                    for(int j = -m2; j <= m2; j++) {
+                        sum += filter[m2 + j][n2 + k] * Pixels.getB(image.getRGB(x-j, y-k));
+                    }
+                }
+
+                sum = Math.max(0, sum);
+                sum = Math.min(255, sum);
+
+                resultImg.setRGB(x, y, Pixels.assemblePixel((int)sum));
+            }
+        }
+
+        return resultImg;
+    }
+
+
+    public void gaussianFilter() {
+        float[][] kernel = new float[3][3];
+        kernel [0][0] = 0.0625f; kernel [0][1] = 0.125f; kernel [0][2] = 0.0625f;
+        kernel [1][0] = 0.125f; kernel [1][1] = 0.25f; kernel [1][2] = 0.125f;
+        kernel [2][0] = 0.0625f; kernel [2][1] = 0.125f; kernel [2][2] = 0.0625f;
+        if(targetImage.getImage() == null) {
+            copyToTarget();
+        }
+        int pixel;
+        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        image = convolution(kernel, image);
+
+
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+    }
+
+    public void laplacianFilter() {
+        float[][] kernel = {
+                {0, -1, 0},
+                {-1, 4, -1},
+                {0, -1, 0},
+        };
+
+        if(targetImage.getImage() == null) {
+            copyToTarget();
+        }
+        int pixel;
+        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        image = convolution(kernel, image);
+        for(int i = 0; i < image.getWidth(); i++) {
+            for(int j = 0; j < image.getHeight(); j++) {
+                pixel = Pixels.getR(image.getRGB(i, j));
+                pixel += 127;
+                pixel = Math.max(0, pixel);
+                pixel = Math.min(255, pixel);
+                image.setRGB(i, j, Pixels.assemblePixel(pixel));
+
+            }
+        }
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+
+
+    }
+
+    public void highPassFilter() {
+        float[][] kernel = {
+                {-1, -1, -1},
+                {-1, 8, -1},
+                {-1, -1, -1}
+        };
+
+        if(targetImage.getImage() == null) {
+            copyToTarget();
+        }
+        int pixel;
+        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        image = convolution(kernel, image);
+        for(int i = 0; i < image.getWidth(); i++) {
+            for(int j = 0; j < image.getHeight(); j++) {
+                pixel = Pixels.getR(image.getRGB(i, j));
+                //pixel += 127;
+                pixel = Math.max(0, pixel);
+                pixel = Math.min(255, pixel);
+                image.setRGB(i, j, Pixels.assemblePixel(pixel));
+
+            }
+        }
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+    }
+
+    public void prewittXFilter() {
+        float[][] kernel = {
+                {-1, 0, 1},
+                {-1, 0, 1},
+                {-1, 0, 1}
+        };
+
+        if(targetImage.getImage() == null) {
+            copyToTarget();
+        }
+        int pixel;
+        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        image = convolution(kernel, image);
+        for(int i = 0; i < image.getWidth(); i++) {
+            for(int j = 0; j < image.getHeight(); j++) {
+                pixel = Pixels.getR(image.getRGB(i, j));
+                pixel += 127;
+                pixel = Math.max(0, pixel);
+                pixel = Math.min(255, pixel);
+                image.setRGB(i, j, Pixels.assemblePixel(pixel));
+
+            }
+        }
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+    }
+
+    public void prewittYFilter() {
+        float[][] kernel = {
+                {-1, -1, -1},
+                {-0, 0, 0},
+                {1, 1, 1}
+        };
+
+        if(targetImage.getImage() == null) {
+            copyToTarget();
+        }
+        int pixel;
+        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        image = convolution(kernel, image);
+        for(int i = 0; i < image.getWidth(); i++) {
+            for(int j = 0; j < image.getHeight(); j++) {
+                pixel = Pixels.getR(image.getRGB(i, j));
+                pixel += 127;
+                pixel = Math.max(0, pixel);
+                pixel = Math.min(255, pixel);
+                image.setRGB(i, j, Pixels.assemblePixel(pixel));
+
+            }
+        }
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+    }
+
+    public void sobelXFilter() {
+        float[][] kernel = {
+                {-1, 0, 1},
+                {-2, 0, 2},
+                {-1, 0, 1}
+        };
+
+        if(targetImage.getImage() == null) {
+            copyToTarget();
+        }
+        int pixel;
+        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        image = convolution(kernel, image);
+        for(int i = 0; i < image.getWidth(); i++) {
+            for(int j = 0; j < image.getHeight(); j++) {
+                pixel = Pixels.getR(image.getRGB(i, j));
+                pixel += 127;
+                pixel = Math.max(0, pixel);
+                pixel = Math.min(255, pixel);
+                image.setRGB(i, j, Pixels.assemblePixel(pixel));
+
+            }
+        }
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+    }
+
+    public void sobelYFilter() {
+        float[][] kernel = {
+                {-1, -2, -1},
+                {0, 0, 0},
+                {1, 2, 1}
+        };
+
+        if(targetImage.getImage() == null) {
+            copyToTarget();
+        }
+        int pixel;
+        BufferedImage image = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        image = convolution(kernel, image);
+        for(int i = 0; i < image.getWidth(); i++) {
+            for(int j = 0; j < image.getHeight(); j++) {
+                pixel = Pixels.getR(image.getRGB(i, j));
+                pixel += 127;
+                pixel = Math.max(0, pixel);
+                pixel = Math.min(255, pixel);
+                image.setRGB(i, j, Pixels.assemblePixel(pixel));
+
+            }
+        }
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+    }
+
 
 }
 

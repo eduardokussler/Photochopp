@@ -59,37 +59,7 @@ public class HistogramMatching {
         loadImage(imgSnd);
     }
 
-    private BufferedImage luminance(BufferedImage img) {
-        int pixel;
-        int alpha = 255;
-        int red   = 0;
-        int redMask = 0x00ff0000;
-        int green = 255;
-        int greenMask = 0x0000ff00;
-        int blue  = 0;
-        int blueMask = 0x000000ff;
-        // argb é um inteiro (32bits) que representa o pixel
-        // AAAAAAAA|RRRRRRRR|GGGGGGGG|BBBBBBBBB
-        int luminance;
-        int argb = 0;
-        for(int i = 0; i < img.getWidth(); i++){
-            for(int j = 0; j < img.getHeight(); j++){
-                pixel = img.getRGB(i,j);
-                blue = pixel & blueMask;
-                blue = (int) (blue * 0.114);
-                red = pixel & redMask;
-                // Fazendo o shift para o valor do vermelho não ter peso maior
-                red =(int) ((red >> 16) * 0.299);
-                green = pixel & greenMask;
-                // Fazendo o shift para o valor do verde não ter peso maior
-                green =(int) ((green >> 8) * 0.587);
-                luminance = red + green + blue;
-                argb = Pixels.assemblePixel(luminance);
-                img.setRGB(i,j, argb);
-            }
-        }
-        return img;
-    }
+
 
     
     private int findTargetShadeClosest(int shade, int [] srcHistCum, int [] targetHistCum ) {
@@ -124,15 +94,13 @@ public class HistogramMatching {
 
         BufferedImage imgMatched =  SwingFXUtils.fromFXImage(imgFst.getImage(),null);
         // Testando se as imagens já estão em preto e branco ou não
-        int randPixel = SwingFXUtils.fromFXImage(imgFst.getImage(), null).getRGB((int)(Math.random() * imgFst.getImage().getWidth()), (int)(Math.random() * imgFst.getImage().getHeight()));
-        if(Pixels.getR(randPixel) != Pixels.getG(randPixel) || Pixels.getR(randPixel) != Pixels.getB(randPixel) || Pixels.getB(randPixel) != Pixels.getG(randPixel)) {
+        if(!Pixels.isGrayscale(imgMatched)) {
             BufferedImage image = SwingFXUtils.fromFXImage(imgFst.getImage(), null);
-            imgFst.setImage(SwingFXUtils.toFXImage(luminance(image), null));
+            imgFst.setImage(SwingFXUtils.toFXImage(Pixels.luminance(image), null));
         }
-        randPixel = SwingFXUtils.fromFXImage(imgSnd.getImage(), null).getRGB((int)(Math.random() * imgSnd.getImage().getWidth()), (int)(Math.random() * imgSnd.getImage().getHeight()));
-        if(Pixels.getR(randPixel) != Pixels.getG(randPixel) || Pixels.getR(randPixel) != Pixels.getB(randPixel) || Pixels.getB(randPixel) != Pixels.getG(randPixel)) {
+        if(!Pixels.isGrayscale(SwingFXUtils.fromFXImage(imgSnd.getImage(), null))) {
             BufferedImage image = SwingFXUtils.fromFXImage(imgSnd.getImage(), null);
-            imgSnd.setImage(SwingFXUtils.toFXImage(luminance(image), null));
+            imgSnd.setImage(SwingFXUtils.toFXImage(Pixels.luminance(image), null));
         }
 
         // Calculando os histogramas
