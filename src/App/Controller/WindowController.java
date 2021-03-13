@@ -29,10 +29,10 @@ import java.io.IOException;
 
 public class WindowController {
     @FXML
-    private ImageView originalImage;
+    public ImageView originalImage;
 
     @FXML
-    private ImageView targetImage;
+    public ImageView targetImage;
 
     @FXML
     private Spinner spnColors;
@@ -53,10 +53,18 @@ public class WindowController {
 
     public static void showView() throws IOException {
         Parent root = FXMLLoader.load(WindowController.class.getResource("Window.fxml"));
+        // Creating another window
+        FXMLLoader loader = new FXMLLoader(NewFilter.class.getResource("NewFilter.fxml"));
+        Parent rootConv = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Photochopp - New convolution filter");
+        stage.setScene(new Scene(rootConv, 600, 400));
+
+        NewFilter newFilterController = loader.getController();
         Main.stage.setTitle("Photochopp");
         Main.stage.setScene(new Scene(root, 1500, 900));
         Main.stage.show();
-
+        stage.show();
     }
 
     public void setOriginalImage() throws IOException {
@@ -579,7 +587,7 @@ public class WindowController {
 
     }
 
-    private BufferedImage convolution(float [][] filter, BufferedImage image) {
+    public static BufferedImage convolution(double [][] filter, BufferedImage image) {
         BufferedImage resultImg = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
         if(!Pixels.isGrayscale(image)) {
             image = Pixels.luminance(image);
@@ -616,7 +624,7 @@ public class WindowController {
 
 
     public void gaussianFilter() {
-        float[][] kernel = new float[3][3];
+        double[][] kernel = new double[3][3];
         kernel [0][0] = 0.0625f; kernel [0][1] = 0.125f; kernel [0][2] = 0.0625f;
         kernel [1][0] = 0.125f; kernel [1][1] = 0.25f; kernel [1][2] = 0.125f;
         kernel [2][0] = 0.0625f; kernel [2][1] = 0.125f; kernel [2][2] = 0.0625f;
@@ -632,7 +640,7 @@ public class WindowController {
     }
 
     public void laplacianFilter() {
-        float[][] kernel = {
+        double[][] kernel = {
                 {0, -1, 0},
                 {-1, 4, -1},
                 {0, -1, 0},
@@ -660,7 +668,7 @@ public class WindowController {
     }
 
     public void highPassFilter() {
-        float[][] kernel = {
+        double[][] kernel = {
                 {-1, -1, -1},
                 {-1, 8, -1},
                 {-1, -1, -1}
@@ -686,7 +694,7 @@ public class WindowController {
     }
 
     public void prewittXFilter() {
-        float[][] kernel = {
+        double[][] kernel = {
                 {-1, 0, 1},
                 {-1, 0, 1},
                 {-1, 0, 1}
@@ -712,7 +720,7 @@ public class WindowController {
     }
 
     public void prewittYFilter() {
-        float[][] kernel = {
+        double[][] kernel = {
                 {-1, -1, -1},
                 {-0, 0, 0},
                 {1, 1, 1}
@@ -738,7 +746,7 @@ public class WindowController {
     }
 
     public void sobelXFilter() {
-        float[][] kernel = {
+        double[][] kernel = {
                 {-1, 0, 1},
                 {-2, 0, 2},
                 {-1, 0, 1}
@@ -764,7 +772,7 @@ public class WindowController {
     }
 
     public void sobelYFilter() {
-        float[][] kernel = {
+        double[][] kernel = {
                 {-1, -2, -1},
                 {0, 0, 0},
                 {1, 2, 1}
@@ -827,5 +835,19 @@ public class WindowController {
 
         targetImage.setImage(SwingFXUtils.toFXImage(image, null));
     }
+
+    public void convolveNewFilter() {
+        double [][] kernel = Kernel.kernel;
+
+        if(targetImage.getImage() == null) {
+            targetImage.setImage(originalImage.getImage());
+        }
+        BufferedImage img = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+
+        img = convolution(kernel, img);
+
+        targetImage.setImage(SwingFXUtils.toFXImage(img, null));
+    }
+
 }
 

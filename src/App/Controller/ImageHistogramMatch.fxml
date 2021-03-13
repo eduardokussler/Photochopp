@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controller.ImageHistogramMatch">
    <children>
-      <ImageView fx:id="imgHistMatch" fitHeight="900.0" fitWidth="1200.0" layoutX="7.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imgHistMatch" fitHeight="869.0" fitWidth="1200.0" layoutX="7.0" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="343.0" layoutY="869.0" mnemonicParsing="false" onAction="#save" text="Save Image" />
    </children>
 </AnchorPane>

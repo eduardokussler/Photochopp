@@ -29,7 +29,7 @@
             </Spinner>
             <Spinner fx:id="spnContrast" editable="true" layoutX="152.0" layoutY="151.0">
                <valueFactory>
-                  <SpinnerValueFactory.DoubleSpinnerValueFactory amountToStepBy="0.25" initialValue="0.5" max="255.0" min="0.0" />
+                  <SpinnerValueFactory.DoubleSpinnerValueFactory amountToStepBy="0.25" initialValue="0.5" max="255.0" min="0.1" />
 
                </valueFactory>
             </Spinner>
@@ -57,14 +57,15 @@
             <Button layoutX="526.0" layoutY="197.0" mnemonicParsing="false" onAction="#prewittYFilter" text="Prewitt Hy" />
             <Button layoutX="42.0" layoutY="253.0" mnemonicParsing="false" onAction="#sobelXFilter" text="Sobel Hx" />
             <Button layoutX="148.0" layoutY="253.0" mnemonicParsing="false" onAction="#sobelYFilter" text="Sobel Hy" />
-             <Button layoutX="148.0" layoutY="253.0" mnemonicParsing="false" onAction="#rotateLeft" text="Rotate Left" />
-             <Button layoutX="259.0" layoutY="253.0" mnemonicParsing="false" onAction="#rotateRight" text="Rotate Right" />
+             <Button layoutX="393.0" layoutY="253.0" mnemonicParsing="false" onAction="#rotateLeft" text="Rotate Left" />
+             <Button layoutX="494.0" layoutY="253.0" mnemonicParsing="false" onAction="#rotateRight" text="Rotate Right" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="716.0" prefWidth="743.0">
          <children>
             <ImageView fx:id="targetImage" fitHeight="538.0" fitWidth="717.0" layoutX="7.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
-            <Button fx:id="btnSave" layoutX="195.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveImage" text="Save" />
-            <Button layoutX="26.0" layoutY="14.0" mnemonicParsing="false" onAction="#createHistMatchWindow" text="Histogram Match" />
+            <Button fx:id="btnSave" layoutX="195.0" layoutY="18.0" mnemonicParsing="false" onAction="#saveImage" text="Save" />
+            <Button layoutX="39.0" layoutY="18.0" mnemonicParsing="false" onAction="#createHistMatchWindow" text="Histogram Match" />
+            <Button layoutX="281.0" layoutY="18.0" mnemonicParsing="false" onAction="#convolveNewFilter" text="Convolution with Arbitrary Filter" />
          </children></AnchorPane>
   </items>
 </SplitPane>

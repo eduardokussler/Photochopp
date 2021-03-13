@@ -46,7 +46,7 @@ public class Histogram {
             hist_cum[i] = (int) (hist_cum[i - 1] + hist[i]);
         }
         for (int i = 1; i < hist.length; i++) {
-            hist_cum[i] = Math.round((255 * hist_cum[i]) / (image.getHeight() * image.getWidth()));
+            hist_cum[i] = Math.round((255 * hist_cum[i]) / (float)(image.getHeight() * image.getWidth()));
         }
 
         return hist_cum;
