@@ -789,6 +789,43 @@ public class WindowController {
         targetImage.setImage(SwingFXUtils.toFXImage(image, null));
     }
 
+    public void rotateRight() {
+        if(targetImage.getImage() == null) {
+            targetImage.setImage(originalImage.getImage());
+        }
+        BufferedImage srcImg = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        // Criando uma imagem com as dimensões trocadas
+        BufferedImage image = new BufferedImage((int)targetImage.getImage().getHeight(), (int)targetImage.getImage().getWidth(), BufferedImage.TYPE_INT_ARGB);
+        int newWidth = image.getWidth();
+        int newHeight = image.getHeight();
 
+        for(int i = 0; i < newHeight; i++) {
+            for(int j = 0; j < newWidth; j++) {
+                image.setRGB(newWidth-1-j, i, srcImg.getRGB(i, j));
+            }
+        }
+
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+
+    }
+
+    public void rotateLeft() {
+        if(targetImage.getImage() == null) {
+            targetImage.setImage(originalImage.getImage());
+        }
+        BufferedImage srcImg = SwingFXUtils.fromFXImage(targetImage.getImage(), null);
+        // Criando uma imagem com as dimensões trocadas
+        BufferedImage image = new BufferedImage((int)targetImage.getImage().getHeight(), (int)targetImage.getImage().getWidth(), BufferedImage.TYPE_INT_ARGB);
+        int newWidth = image.getWidth();
+        int newHeight = image.getHeight();
+
+        for(int i = 0; i < newHeight; i++) {
+            for(int j = 0; j < newWidth; j++) {
+                image.setRGB(j, newHeight-i-1, srcImg.getRGB(i, j));
+            }
+        }
+
+        targetImage.setImage(SwingFXUtils.toFXImage(image, null));
+    }
 }
 
